@@ -2,7 +2,7 @@
 
                  SCons - a software construction tool
 
-                         Version 2.3.0
+                         Version 2.3.2
 
 
 This is SCons, a tool for building software (and other files).  SCons is
@@ -56,7 +56,7 @@ provided Python-standard setup script as follows:
 
 By default, the above command will do the following:
 
-    --  Install the version-numbered "scons-2.3.0" and "sconsign-2.3.0"
+    --  Install the version-numbered "scons-2.3.2" and "sconsign-2.3.2"
         scripts in the default system script directory (/usr/bin or
         C:\Python*\Scripts, for example).  This can be disabled by
         specifying the "--no-version-script" option on the command
@@ -70,17 +70,17 @@ By default, the above command will do the following:
         making it the default on your system.
 
         On UNIX or Linux systems, you can have the "scons" and "sconsign"
-        scripts be hard links or symbolic links to the "scons-2.3.0" and
-        "sconsign-2.3.0" scripts by specifying the "--hardlink-scons"
+        scripts be hard links or symbolic links to the "scons-2.3.2" and
+        "sconsign-2.3.2" scripts by specifying the "--hardlink-scons"
         or "--symlink-scons" options on the command line.
 
-    --  Install "scons-2.3.0.bat" and "scons.bat" wrapper scripts in the
+    --  Install "scons-2.3.2.bat" and "scons.bat" wrapper scripts in the
         Python prefix directory on Windows (C:\Python*, for example).
         This can be disabled by specifying the "--no-install-bat" option
         on the command line.
 
         On UNIX or Linux systems, the "--install-bat" option may be
-        specified to have "scons-2.3.0.bat" and "scons.bat" files
+        specified to have "scons-2.3.2.bat" and "scons.bat" files
         installed in the default system script directory, which is useful
         if you want to install SCons in a shared file system directory
         that can be used to execute SCons from both UNIX/Linux and
@@ -88,7 +88,7 @@ By default, the above command will do the following:
 
     --  Install the SCons build engine (a Python module) in an
         appropriate version-numbered SCons library directory
-        (/usr/lib/scons-2.3.0 or C:\Python*\scons-2.3.0, for example).
+        (/usr/lib/scons-2.3.2 or C:\Python*\scons-2.3.2, for example).
         See below for more options related to installing the build
         engine library.
 
@@ -174,7 +174,7 @@ Submission page:
 
 You can also send mail to the SCons developers' mailing list:
 
-        dev@scons.tigris.org
+        scons-dev@scons.org
 
 But even if you send email to the mailing list please make sure that you
 ALSO submit a bug report to the project page bug tracker, because bug
@@ -187,11 +187,11 @@ MAILING LISTS
 An active mailing list for users of SCons is available.  You may send
 questions or comments to the list at:
 
-        users@scons.tigris.org
+        scons-users@scons.org
 
 You may subscribe to the mailing list by sending email to:
 
-        users-subscribe@scons.tigris.org
+        scons-users-join@scons.org
 
 There is also a low-volume mailing list available for announcements
 about SCons.  Subscribe by sending email to:
@@ -239,5 +239,5 @@ With plenty of help from the SCons Development team:
         Greg Spencer
         Christoph Wiedemann
 
-Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 The SCons Foundation
-src/README.txt  2013/03/03 09:48:35 garyo
+Copyright (c) 2001 - 2014 The SCons Foundation
+src/README.txt  2014/07/05 09:42:21 garyo

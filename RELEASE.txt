@@ -1,95 +1,99 @@
-  A new SCons release, 2.3.0, is now available
+  A new SCons release, 2.3.2, is now available
   on the SCons download page:
 
           http://www.scons.org/download.php
 
-  This release adds several new features and fixes many issues.
+  This is a maintenance release, focusing on bug fixes.
 
-  Here is a summary of the changes since 2.2:
+  Here is a summary of the changes since 2.3.1:
 
   NEW FUNCTIONALITY
 
-    - Versioned shared library support for Linux and Mac:
-      Add SHLIBVERSION as an option that tells SharedLibrary to build
-      a versioned shared library and create the required symlinks.
-      Add builder InstallVersionedLib to create the required symlinks
-      installing a versioned shared library.
+    - Support for Visual Studio 12.0Exp and 2013 (12.0).
 
   DEPRECATED FUNCTIONALITY
 
-    - Removed a lot of Python 2.3 and older support code
-    - Hide deprecated --debug={dtree,stree,tree} from --help output
+    - RPM and m4 are no longer in the default toolset on Windows.
+    - BitKeeper, CVS, Perforce, RCS, SCCS are deprecated from the
+      default toolset and will be removed from the default toolset
+      in future SCons versions.
+    - D language, version 1, is now deprecated.  Version 2 is
+      supported.
 
   CHANGED/ENHANCED EXISTING FUNCTIONALITY
 
-    - No changes
+    - Revamp of D language support.
+      Tools for DMD, GDC and LDC are provided, and integrated
+      with the C and C++ linking.
+    - TeX builder now supports -synctex=1
+    - TeX builder cleans auxiliary files correctly with biblatex.
 
   FIXES
 
-    - Fix subprocess spawning on Windows.  Work around a Windows
-      bug that can crash python occasionally when using -jN. (#2449)
-    - Fix nested LIBPATH expansion by flattening sequences in subst_path.
-    - Fix WiX Tool to use .wixobj rather than .wxiobj for compiler output
-    - Add MSVC10 and MSVC11 support to get_output low-level bat script runner.
-    - Fix MSVS solution generation for VS11, and fixed tests.
-
-  IMPROVEMENTS
-
-    - Error messages from option parser now include hints about valid choices
-    - Support building with WiX releases after 2.0
-    - Print target name with command execution time with --debug=time
-    - Updated the TeX builder to support the \newglossary command
-      in LaTeX's glossaries package and the files it creates.
-    - Improve support for new versions of biblatex in the TeX builder
-      so biber is called automatically if biblatex requires it.
+    - Fixed handling of nested ifs in CPP scanner PreProcessor class.
+    - Respect user's CC/CXX values; don't always overwrite in generate()
+    - Delegate linker Tool.exists() to CC/CXX Tool.exists().
+    - Fixed NoClean() for multi-target builders (#2353).
+    - Fix SConf tests that write output
+    - get default RPM architecture more robustly when building RPMs
+    - Allow varlist to be specified as list of strings for Actions (#2754)
+    - Fixes to Docbook tool
 
   PACKAGING
 
-    - No changes
+    - Update XML doc editor configuration
 
   DEVELOPMENT
 
-    - Updated test framework to support dir and file fixtures and
-      added ability to test external (out-of-tree) tools.
-      See doc in QMTest/test-framework.rst.
-    - Added ability to run scripts/scons.py directly from source checkout
-    - Several fixes for runtest.py
-    - Fixed several errors in the test suite.
-    - Add -jN support to runtest.py to run tests in parallel
-
+    - Improvements to running scons.py from the source tree
 
 Thanks to:
   Dirk Baechle,
   Vincent Beffar,
   Thomas Berg,
+  Antonio Cavallo,
   Jean-François Colson,
   Bauke Conijn,
   Bill Deegan,
   Ken Deeter,
   dubcanada on Bitbucket,
   Luca Falavigna,
+  Andrew Featherstone,
+  Alexandre Feblot,
+  Shane Gannon,
   Alexander Goomenyuk,
   Justin Gullingsrud,
+  Michael Haubenwallner,
   Joshua Hughes,
   Alexey Klimkin,
   Steven Knight,
   Arve Knudsen,
+  Philipp Kraus,
   Jean-Baptiste Lab,
   Juan Lang,
   Rob Managan,
+  Michael McDougall,
   Mortoray,
+  Manuel Francisco Naranjo,
   Gary Oberbrunner,
   Alexey Petruchik,
   Evgeny Podjachev,
+  David Rothenberger,
   smallbub on Bitbucket,
   Sohail Somani,
+  Stefan Sperling,
+  Amir Szekely,
+  Tom Tanner,
   Anatoly Techtonik,
+  Bogdan Tenea,
   Paweł Tomulik,
+  Sye van der Veen,
+  veon on bitbucket,
   Greg Ward,
   Allen Weeks,
   Russel Winder,
   Joe Zuntz
-  for their contributions to this release.
+  for their contributions to this and prior releases.
 
-Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 The SCons Foundation
-src/RELEASE.txt  2013/03/03 09:48:35 garyo
+Copyright (c) 2001 - 2014 The SCons Foundation
+src/RELEASE.txt  2014/07/05 09:42:21 garyo

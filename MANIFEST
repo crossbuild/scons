@@ -57,6 +57,7 @@ engine/SCons/Taskmaster.py
 engine/SCons/Tool/386asm.py
 engine/SCons/Tool/BitKeeper.py
 engine/SCons/Tool/CVS.py
+engine/SCons/Tool/DCommon.py
 engine/SCons/Tool/FortranCommon.py
 engine/SCons/Tool/GettextCommon.py
 engine/SCons/Tool/JavaCommon.py
@@ -84,8 +85,10 @@ engine/SCons/Tool/bcc32.py
 engine/SCons/Tool/c++.py
 engine/SCons/Tool/cc.py
 engine/SCons/Tool/cvf.py
+engine/SCons/Tool/cyglink.py
 engine/SCons/Tool/default.py
 engine/SCons/Tool/dmd.py
+engine/SCons/Tool/docbook/__init__.py
 engine/SCons/Tool/dvi.py
 engine/SCons/Tool/dvipdf.py
 engine/SCons/Tool/dvips.py
@@ -99,6 +102,7 @@ engine/SCons/Tool/g++.py
 engine/SCons/Tool/g77.py
 engine/SCons/Tool/gas.py
 engine/SCons/Tool/gcc.py
+engine/SCons/Tool/gdc.py
 engine/SCons/Tool/gettext.py
 engine/SCons/Tool/gfortran.py
 engine/SCons/Tool/gnulink.py
@@ -119,6 +123,7 @@ engine/SCons/Tool/jar.py
 engine/SCons/Tool/javac.py
 engine/SCons/Tool/javah.py
 engine/SCons/Tool/latex.py
+engine/SCons/Tool/ldc.py
 engine/SCons/Tool/lex.py
 engine/SCons/Tool/link.py
 engine/SCons/Tool/linkloc.py
