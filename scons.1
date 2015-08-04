@@ -2,12 +2,12 @@
 .\"     Title: SCONS
 .\"    Author: Steven Knight
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: <pubdate>2004 - 2014</pubdate>
-.\"    Manual: SCons 2.3.2
-.\"    Source: July 2014 version 2.3.2
+.\"      Date: <pubdate>2004 - 2015</pubdate>
+.\"    Manual: SCons 2.3.6
+.\"    Source: SCons 2.3.6 version 2.3.6
 .\"  Language: English
 .\"
-.TH "SCONS" "1" "<pubdate>2004 - 2014</pubdate>" "July 2014 version 2.3.2" "SCons 2.3.2"
+.TH "SCONS" "1" "<pubdate>2004 - 2015</pubdate>" "SCons 2\&.3\&.6 version 2.3.6" "SCons 2\&.3\&.6"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -360,7 +360,7 @@ else:
 The command\-line variable arguments are also available in the ARGLIST list, indexed by their order on the command line\&. This allows you to process them in order rather than by name, if necessary\&. ARGLIST[0] returns a tuple containing (argname, argvalue)\&. A Python exception is thrown if you try to access a list member that does not exist\&.
 .PP
 \fBscons\fR
-requires Python version 2\&.4 or later\&. There should be no other dependencies or requirements to run
+requires Python version 2\&.7 or later\&. There should be no other dependencies or requirements to run
 \fBscons\&.\fR
 .PP
 By default,
@@ -1752,7 +1752,6 @@ Sets:
 \fB$SHDLINK\fR,
 \fB$SHDLINKCOM\fR,
 \fB$SHDLINKFLAGS\fR,
-\fB$STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME\fR,
 \fB$_DDEBUGFLAGS\fR,
 \fB$_DFLAGS\fR,
 \fB$_DINCFLAGS\fR,
@@ -2102,6 +2101,28 @@ Uses:
 \fB$SHF03PPCOMSTR\fR\&.
 .RE
 .PP
+f08
+.RS 4
+Set construction variables for generic POSIX Fortran 08 compilers\&.
+.sp
+Sets:
+\fB$F08\fR,
+\fB$F08COM\fR,
+\fB$F08FLAGS\fR,
+\fB$F08PPCOM\fR,
+\fB$SHF08\fR,
+\fB$SHF08COM\fR,
+\fB$SHF08FLAGS\fR,
+\fB$SHF08PPCOM\fR,
+\fB$_F08INCFLAGS\fR\&.
+.sp
+Uses:
+\fB$F08COMSTR\fR,
+\fB$F08PPCOMSTR\fR,
+\fB$SHF08COMSTR\fR,
+\fB$SHF08PPCOMSTR\fR\&.
+.RE
+.PP
 f77
 .RS 4
 Set construction variables for generic POSIX Fortran 77 compilers\&.
@@ -2283,7 +2304,6 @@ Sets:
 \fB$SHDLINK\fR,
 \fB$SHDLINKCOM\fR,
 \fB$SHDLINKFLAGS\fR,
-\fB$STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME\fR,
 \fB$_DDEBUGFLAGS\fR,
 \fB$_DFLAGS\fR,
 \fB$_DINCFLAGS\fR,
@@ -2691,7 +2711,6 @@ Sets:
 \fB$SHDLINK\fR,
 \fB$SHDLINKCOM\fR,
 \fB$SHDLINKFLAGS\fR,
-\fB$STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME\fR,
 \fB$_DDEBUGFLAGS\fR,
 \fB$_DFLAGS\fR,
 \fB$_DINCFLAGS\fR,
@@ -3131,16 +3150,16 @@ Uses:
 \fB$ASPPCOMSTR\fR\&.
 .RE
 .PP
+packaging
+.RS 4
+A framework for building binary and source packages\&.
+.RE
+.PP
 Packaging
 .RS 4
 Sets construction variables for the
 \fBPackage\fR
 Builder\&.
-.RE
-.PP
-packaging
-.RS 4
-A framework for building binary and source packages\&.
 .RE
 .PP
 pdf
@@ -4439,13 +4458,6 @@ env\&.Install(\*(Aq/usr/local/bin\*(Aq, source = [\*(Aqfoo\*(Aq, \*(Aqbar\*(Aq])
 \fBInstallAs()\fR, \fBenv\&.InstallAs()\fR
 .RS 4
 Installs one or more source files or directories to specific names, allowing changing a file or directory name as part of the installation\&. It is an error if the target and source arguments list different numbers of files or directories\&.
-.RE
-.PP
-\fBInstallVersionedLib()\fR, \fBenv\&.InstallVersionedLib()\fR
-.RS 4
-Installs a versioned shared library\&. The
-\fB$SHLIBVERSION\fR
-construction variable should be defined in the environment to confirm the version number in the library name\&. The symlinks appropriate to the architecture will be generated\&.
 .sp
 .if n \{\
 .RS 4
@@ -4455,6 +4467,29 @@ env\&.InstallAs(target = \*(Aq/usr/local/bin/foo\*(Aq,
               source = \*(Aqfoo_debug\*(Aq)
 env\&.InstallAs(target = [\*(Aq\&.\&./lib/libfoo\&.a\*(Aq, \*(Aq\&.\&./lib/libbar\&.a\*(Aq],
               source = [\*(AqlibFOO\&.a\*(Aq, \*(AqlibBAR\&.a\*(Aq])
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBInstallVersionedLib()\fR, \fBenv\&.InstallVersionedLib()\fR
+.RS 4
+Installs a versioned shared library\&. The
+\fB$SHLIBVERSION\fR
+construction variable should be defined in the environment to confirm the version number in the library name\&. If
+\fB$SHLIBVERSION\fR
+is not defined a warning will be issued and the name of the library will be parsed to derive the version\&. The symlinks appropriate to the architecture will be generated\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+env\&.InstallVersionedLib(target = \*(Aq/usr/local/bin/foo\*(Aq,
+              source = \*(Aqlibxyz\&.1\&.5\&.2\&.so\*(Aq)
+env\&.InstallVersionedLib(target = \*(Aq/usr/local/bin/foo\*(Aq,
+              source = \*(Aqlibxyz\&.1\&.5\&.2\&.so\*(Aq,
+              SHLIBVERSION=\*(Aq1\&.5\&.2\*(Aq)
 .fi
 .if n \{\
 .RE
@@ -4789,37 +4824,54 @@ construction variable as strings, NOT as SCons File Nodes\&. This is because the
 The above filename lists are all optional, although at least one must be specified for the resulting project file to be non\-empty\&.
 .sp
 In addition to the above lists of values, the following values may be specified:
-.sp
-
-target: The name of the target
+.PP
+target
+.RS 4
+The name of the target
 \&.dsp
 or
 \&.vcproj
 file\&. The correct suffix for the version of Visual Studio must be used, but the
 \fB$MSVSPROJECTSUFFIX\fR
 construction variable will be defined to the correct value (see example below)\&.
-.sp
-
-variant: The name of this particular variant\&. For Visual Studio 7 projects, this can also be a list of variant names\&. These are typically things like "Debug" or "Release", but really can be anything you want\&. For Visual Studio 7 projects, they may also specify a target platform separated from the variant name by a
+.RE
+.PP
+variant
+.RS 4
+The name of this particular variant\&. For Visual Studio 7 projects, this can also be a list of variant names\&. These are typically things like "Debug" or "Release", but really can be anything you want\&. For Visual Studio 7 projects, they may also specify a target platform separated from the variant name by a
 |
 (vertical pipe) character:
 Debug|Xbox\&. The default target platform is Win32\&. Multiple calls to
 \fBMSVSProject\fR
 with different variants are allowed; all variants will be added to the project file with their appropriate build targets and sources\&.
-.sp
-
-buildtarget: An optional string, node, or list of strings or nodes (one per build variant), to tell the Visual Studio debugger what output target to use in what build variant\&. The number of
+.RE
+.PP
+cmdargs
+.RS 4
+Additional command line arguments for the different variants\&. The number of
+cmdargs
+entries must match the number of
+variant
+entries, or be empty (not specified)\&. If you give only one, it will automatically be propagated to all variants\&.
+.RE
+.PP
+buildtarget
+.RS 4
+An optional string, node, or list of strings or nodes (one per build variant), to tell the Visual Studio debugger what output target to use in what build variant\&. The number of
 buildtarget
 entries must match the number of
 variant
 entries\&.
-.sp
-
-runfile: The name of the file that Visual Studio 7 and later will run and debug\&. This appears as the value of the
+.RE
+.PP
+runfile
+.RS 4
+The name of the file that Visual Studio 7 and later will run and debug\&. This appears as the value of the
 Output
-field in the resutling Visual Studio project file\&. If this is not specified, the default is the same as the specified
+field in the resulting Visual Studio project file\&. If this is not specified, the default is the same as the specified
 buildtarget
 value\&.
+.RE
 .sp
 Note that because
 SCons
@@ -4860,6 +4912,148 @@ env\&.MSVSProject(target = \*(AqBar\*(Aq + env[\*(AqMSVSPROJECTSUFFIX\*(Aq],
 .if n \{\
 .RE
 .\}
+.sp
+Starting with version 2\&.4 of SCons it\*(Aqs also possible to specify the optional argument
+\fIDebugSettings\fR, which creates files for debugging under Visual Studio:
+.PP
+DebugSettings
+.RS 4
+A dictionary of debug settings that get written to the
+\&.vcproj\&.user
+or the
+\&.vcxproj\&.user
+file, depending on the version installed\&. As it is done for cmdargs (see above), you can specify a
+\fIDebugSettings\fR
+dictionary per variant\&. If you give only one, it will be propagated to all variants\&.
+.RE
+.sp
+Currently, only Visual Studio v9\&.0 and Visual Studio version v11 are implemented, for other versions no file is generated\&. To generate the user file, you just need to add a
+\fIDebugSettings\fR
+dictionary to the environment with the right parameters for your MSVS version\&. If the dictionary is empty, or does not contain any good value, no file will be generated\&.
+.sp
+Following is a more contrived example, involving the setup of a project for variants and DebugSettings:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# Assuming you store your defaults in a file
+vars = Variables(\*(Aqvariables\&.py\*(Aq)
+msvcver = vars\&.args\&.get(\*(Aqvc\*(Aq, \*(Aq9\*(Aq)
+
+# Check command args to force one Microsoft Visual Studio version
+if msvcver == \*(Aq9\*(Aq or msvcver == \*(Aq11\*(Aq:
+  env = Environment(MSVC_VERSION=msvcver+\*(Aq\&.0\*(Aq, MSVC_BATCH=False)
+else:
+  env = Environment()
+    
+AddOption(\*(Aq\-\-userfile\*(Aq, action=\*(Aqstore_true\*(Aq, dest=\*(Aquserfile\*(Aq, default=False,
+          help="Create Visual Studio Project user file")
+
+#
+# 1\&. Configure your Debug Setting dictionary with options you want in the list
+# of allowed options, for instance if you want to create a user file to launch
+# a specific application for testing your dll with Microsoft Visual Studio 2008 (v9):
+#
+V9DebugSettings = {
+    \*(AqCommand\*(Aq:\*(Aqc:\e\emyapp\e\eusing\e\ethisdll\&.exe\*(Aq,
+    \*(AqWorkingDirectory\*(Aq: \*(Aqc:\e\emyapp\e\eusing\e\e\*(Aq,
+    \*(AqCommandArguments\*(Aq: \*(Aq\-p password\*(Aq,
+#     \*(AqAttach\*(Aq:\*(Aqfalse\*(Aq,
+#     \*(AqDebuggerType\*(Aq:\*(Aq3\*(Aq,
+#     \*(AqRemote\*(Aq:\*(Aq1\*(Aq,
+#     \*(AqRemoteMachine\*(Aq: None,
+#     \*(AqRemoteCommand\*(Aq: None,
+#     \*(AqHttpUrl\*(Aq: None,
+#     \*(AqPDBPath\*(Aq: None,
+#     \*(AqSQLDebugging\*(Aq: None,
+#     \*(AqEnvironment\*(Aq: \*(Aq\*(Aq,
+#     \*(AqEnvironmentMerge\*(Aq:\*(Aqtrue\*(Aq,
+#     \*(AqDebuggerFlavor\*(Aq: None,
+#     \*(AqMPIRunCommand\*(Aq: None,
+#     \*(AqMPIRunArguments\*(Aq: None,
+#     \*(AqMPIRunWorkingDirectory\*(Aq: None,
+#     \*(AqApplicationCommand\*(Aq: None,
+#     \*(AqApplicationArguments\*(Aq: None,
+#     \*(AqShimCommand\*(Aq: None,
+#     \*(AqMPIAcceptMode\*(Aq: None,
+#     \*(AqMPIAcceptFilter\*(Aq: None,
+}
+
+#
+# 2\&. Because there are a lot of different options depending on the Microsoft 
+# Visual Studio version, if you use more than one version you have to 
+# define a dictionary per version, for instance if you want to create a user 
+# file to launch a specific application for testing your dll with Microsoft 
+# Visual Studio 2012 (v11):
+#
+V10DebugSettings = {
+    \*(AqLocalDebuggerCommand\*(Aq: \*(Aqc:\e\emyapp\e\eusing\e\ethisdll\&.exe\*(Aq,
+    \*(AqLocalDebuggerWorkingDirectory\*(Aq: \*(Aqc:\e\emyapp\e\eusing\e\e\*(Aq,
+    \*(AqLocalDebuggerCommandArguments\*(Aq: \*(Aq\-p password\*(Aq,
+#     \*(AqLocalDebuggerEnvironment\*(Aq: None,
+#     \*(AqDebuggerFlavor\*(Aq: \*(AqWindowsLocalDebugger\*(Aq,
+#     \*(AqLocalDebuggerAttach\*(Aq: None,
+#     \*(AqLocalDebuggerDebuggerType\*(Aq: None,
+#     \*(AqLocalDebuggerMergeEnvironment\*(Aq: None,
+#     \*(AqLocalDebuggerSQLDebugging\*(Aq: None,
+#     \*(AqRemoteDebuggerCommand\*(Aq: None,
+#     \*(AqRemoteDebuggerCommandArguments\*(Aq: None,
+#     \*(AqRemoteDebuggerWorkingDirectory\*(Aq: None,
+#     \*(AqRemoteDebuggerServerName\*(Aq: None,
+#     \*(AqRemoteDebuggerConnection\*(Aq: None,
+#     \*(AqRemoteDebuggerDebuggerType\*(Aq: None,
+#     \*(AqRemoteDebuggerAttach\*(Aq: None,
+#     \*(AqRemoteDebuggerSQLDebugging\*(Aq: None,
+#     \*(AqDeploymentDirectory\*(Aq: None,
+#     \*(AqAdditionalFiles\*(Aq: None,
+#     \*(AqRemoteDebuggerDeployDebugCppRuntime\*(Aq: None,
+#     \*(AqWebBrowserDebuggerHttpUrl\*(Aq: None,
+#     \*(AqWebBrowserDebuggerDebuggerType\*(Aq: None,
+#     \*(AqWebServiceDebuggerHttpUrl\*(Aq: None,
+#     \*(AqWebServiceDebuggerDebuggerType\*(Aq: None,
+#     \*(AqWebServiceDebuggerSQLDebugging\*(Aq: None,
+}
+
+#
+# 3\&. Select the dictionary you want depending on the version of visual Studio 
+# Files you want to generate\&.
+#
+if not env\&.GetOption(\*(Aquserfile\*(Aq):
+    dbgSettings = None
+elif env\&.get(\*(AqMSVC_VERSION\*(Aq, None) == \*(Aq9\&.0\*(Aq:
+    dbgSettings = V9DebugSettings
+elif env\&.get(\*(AqMSVC_VERSION\*(Aq, None) == \*(Aq11\&.0\*(Aq:
+    dbgSettings = V10DebugSettings
+else:    
+    dbgSettings = None
+
+#
+# 4\&. Add the dictionary to the DebugSettings keyword\&.
+#
+barsrcs = [\*(Aqbar\&.cpp\*(Aq, \*(Aqdllmain\&.cpp\*(Aq, \*(Aqstdafx\&.cpp\*(Aq]
+barincs = [\*(Aqtargetver\&.h\*(Aq]
+barlocalincs = [\*(AqStdAfx\&.h\*(Aq]
+barresources = [\*(Aqbar\&.rc\*(Aq,\*(Aqresource\&.h\*(Aq]
+barmisc = [\*(AqReadMe\&.txt\*(Aq]
+
+dll = env\&.SharedLibrary(target = \*(Aqbar\&.dll\*(Aq,
+                        source = barsrcs)
+
+env\&.MSVSProject(target = \*(AqBar\*(Aq + env[\*(AqMSVSPROJECTSUFFIX\*(Aq],
+                srcs = barsrcs,
+                incs = barincs,
+                localincs = barlocalincs,
+                resources = barresources,
+                misc = barmisc,
+                buildtarget = [dll[0]] * 2,
+                variant = (\*(AqDebug|Win32\*(Aq, \*(AqRelease|Win32\*(Aq),
+                cmdargs = \*(Aqvc=%s\*(Aq %  msvcver,
+                DebugSettings = (dbgSettings, {}))
+.fi
+.if n \{\
+.RE
+.\}
 .RE
 .PP
 \fBMSVSSolution()\fR, \fBenv\&.MSVSSolution()\fR
@@ -4875,19 +5069,25 @@ file\&. For Visual Studio 7 (\&.NET), it will generate a
 file\&.
 .sp
 The following values must be specified:
-.sp
-
-target: The name of the target \&.dsw or \&.sln file\&. The correct suffix for the version of Visual Studio must be used, but the value
+.PP
+target
+.RS 4
+The name of the target \&.dsw or \&.sln file\&. The correct suffix for the version of Visual Studio must be used, but the value
 \fB$MSVSSOLUTIONSUFFIX\fR
 will be defined to the correct value (see example below)\&.
-.sp
-
-variant: The name of this particular variant, or a list of variant names (the latter is only supported for MSVS 7 solutions)\&. These are typically things like "Debug" or "Release", but really can be anything you want\&. For MSVS 7 they may also specify target platform, like this "Debug|Xbox"\&. Default platform is Win32\&.
-.sp
-
-projects: A list of project file names, or Project nodes returned by calls to the
+.RE
+.PP
+variant
+.RS 4
+The name of this particular variant, or a list of variant names (the latter is only supported for MSVS 7 solutions)\&. These are typically things like "Debug" or "Release", but really can be anything you want\&. For MSVS 7 they may also specify target platform, like this "Debug|Xbox"\&. Default platform is Win32\&.
+.RE
+.PP
+projects
+.RS 4
+A list of project file names, or Project nodes returned by calls to the
 \fBMSVSProject\fR
 Builder, to be placed into the solution file\&. It should be noted that these file names are NOT added to the $SOURCES environment variable in form of files, but rather as strings\&. This is because they represent file names to be added to the solution file, not the source files used to build the solution file\&.
+.RE
 .sp
 Example Usage:
 .sp
@@ -4895,9 +5095,8 @@ Example Usage:
 .RS 4
 .\}
 .nf
-env\&.MSVSSolution(target = \*(AqBar\*(Aq + env[\*(AqMSVSSOLUTIONSUFFIX\*(Aq],
-                 projects = [\*(Aqbar\*(Aq + env[\*(AqMSVSPROJECTSUFFIX\*(Aq]],
-                 variant = \*(AqRelease\*(Aq)
+env\&.MSVSSolution(target = \*(AqBar\*(Aq + env[\*(AqMSVSSOLUTIONSUFFIX\*(Aq], projects = [\*(Aqbar\*(Aq
++ env[\*(AqMSVSPROJECTSUFFIX\*(Aq]], variant = \*(AqRelease\*(Aq)
 .fi
 .if n \{\
 .RE
@@ -5903,6 +6102,16 @@ construction variable is defined a versioned shared library is created\&. This m
 as required, adds the version number to the library name, and creates the symlinks that are needed\&.
 \fB$SHLIBVERSION\fR
 needs to be of the form X\&.Y\&.Z, where X and Y are numbers, and Z is a number but can also contain letters to designate alpha, beta, or release candidate patch levels\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+env\&.SharedLibrary(target = \*(Aqbar\*(Aq, source = [\*(Aqbar\&.c\*(Aq, \*(Aqfoo\&.o\*(Aq], SHLIBVERSION=\*(Aq1\&.5\&.2\*(Aq)
+.fi
+.if n \{\
+.RE
+.\}
 .sp
 This builder may create multiple links to the library\&. On a POSIX system, for the shared library libbar\&.so\&.2\&.3\&.1, the links created would be libbar\&.so and libbar\&.so\&.2; on a Darwin (OSX) system the library would be libbar\&.2\&.3\&.1\&.dylib and the link would be libbar\&.dylib\&.
 .sp
@@ -8197,7 +8406,7 @@ which corresponds to \-\-warn and \-\-warning\&.
 See the documentation for the corresponding command line object for information about each specific option\&.
 .RE
 .PP
-Glob(pattern, [ondisk, source, strings]), env\&.Glob(pattern, [ondisk, source, strings])
+Glob(pattern, [ondisk, source, strings, exclude]), env\&.Glob(pattern, [ondisk, source, strings, exclude])
 .RS 4
 Returns Nodes (or strings) that match the specified
 \fIpattern\fR, relative to the directory of the current
@@ -8263,6 +8472,10 @@ directory, not the original
 SConscript
 directory\&.)
 .sp
+The
+\fIexclude\fR
+argument may be set to a pattern or a list of patterns (following the same Unix shell semantics) which must be filtered out of returned elements\&. Elements matching a least one pattern of this list will be excluded\&.
+.sp
 Examples:
 .sp
 .if n \{\
@@ -8271,6 +8484,7 @@ Examples:
 .nf
 Program(\*(Aqfoo\*(Aq, Glob(\*(Aq*\&.c\*(Aq))
 Zip(\*(Aq/tmp/everything\*(Aq, Glob(\*(Aq\&.??*\*(Aq) + Glob(\*(Aq*\*(Aq))
+sources = Glob(\*(Aq*\&.cpp\*(Aq, exclude=[\*(Aqos_*_specific_*\&.cpp\*(Aq]) + Glob(\*(Aqos_%s_specific_*\&.cpp\*(Aq%currentOS)
 .fi
 .if n \{\
 .RE
@@ -11454,6 +11668,152 @@ F03PPFILESUFFIXES
 The list of file extensions for which the compilation + preprocessor pass for F03 dialect will be used\&. By default, this is empty
 .RE
 .PP
+F08
+.RS 4
+The Fortran 08 compiler\&. You should normally set the
+\fB$FORTRAN\fR
+variable, which specifies the default Fortran compiler for all Fortran versions\&. You only need to set
+\fB$F08\fR
+if you need to use a specific compiler or compiler version for Fortran 08 files\&.
+.RE
+.PP
+F08COM
+.RS 4
+The command line used to compile a Fortran 08 source file to an object file\&. You only need to set
+\fB$F08COM\fR
+if you need to use a specific command line for Fortran 08 files\&. You should normally set the
+\fB$FORTRANCOM\fR
+variable, which specifies the default command line for all Fortran versions\&.
+.RE
+.PP
+F08COMSTR
+.RS 4
+The string displayed when a Fortran 08 source file is compiled to an object file\&. If this is not set, then
+\fB$F08COM\fR
+or
+\fB$FORTRANCOM\fR
+(the command line) is displayed\&.
+.RE
+.PP
+F08FILESUFFIXES
+.RS 4
+The list of file extensions for which the F08 dialect will be used\&. By default, this is [\*(Aq\&.f08\*(Aq]
+.RE
+.PP
+F08FLAGS
+.RS 4
+General user\-specified options that are passed to the Fortran 08 compiler\&. Note that this variable does
+\fInot\fR
+contain
+\fB\-I\fR
+(or similar) include search path options that scons generates automatically from
+\fB$F08PATH\fR\&. See
+\fB$_F08INCFLAGS\fR
+below, for the variable that expands to those options\&. You only need to set
+\fB$F08FLAGS\fR
+if you need to define specific user options for Fortran 08 files\&. You should normally set the
+\fB$FORTRANFLAGS\fR
+variable, which specifies the user\-specified options passed to the default Fortran compiler for all Fortran versions\&.
+.RE
+.PP
+_F08INCFLAGS
+.RS 4
+An automatically\-generated construction variable containing the Fortran 08 compiler command\-line options for specifying directories to be searched for include files\&. The value of
+\fB$_F08INCFLAGS\fR
+is created by appending
+\fB$INCPREFIX\fR
+and
+\fB$INCSUFFIX\fR
+to the beginning and end of each directory in
+\fB$F08PATH\fR\&.
+.RE
+.PP
+F08PATH
+.RS 4
+The list of directories that the Fortran 08 compiler will search for include directories\&. The implicit dependency scanner will search these directories for include files\&. Don\*(Aqt explicitly put include directory arguments in
+\fB$F08FLAGS\fR
+because the result will be non\-portable and the directories will not be searched by the dependency scanner\&. Note: directory names in
+\fB$F08PATH\fR
+will be looked\-up relative to the SConscript directory when they are used in a command\&. To force
+scons
+to look\-up a directory relative to the root of the source tree use #: You only need to set
+\fB$F08PATH\fR
+if you need to define a specific include path for Fortran 08 files\&. You should normally set the
+\fB$FORTRANPATH\fR
+variable, which specifies the include path for the default Fortran compiler for all Fortran versions\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+env = Environment(F08PATH=\*(Aq#/include\*(Aq)
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+The directory look\-up can also be forced using the
+\fBDir\fR() function:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+include = Dir(\*(Aqinclude\*(Aq)
+env = Environment(F08PATH=include)
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+The directory list will be added to command lines through the automatically\-generated
+\fB$_F08INCFLAGS\fR
+construction variable, which is constructed by appending the values of the
+\fB$INCPREFIX\fR
+and
+\fB$INCSUFFIX\fR
+construction variables to the beginning and end of each directory in
+\fB$F08PATH\fR\&. Any command lines you define that need the F08PATH directory list should include
+\fB$_F08INCFLAGS\fR:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+env = Environment(F08COM="my_compiler $_F08INCFLAGS \-c \-o $TARGET $SOURCE")
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+F08PPCOM
+.RS 4
+The command line used to compile a Fortran 08 source file to an object file after first running the file through the C preprocessor\&. Any options specified in the
+\fB$F08FLAGS\fR
+and
+\fB$CPPFLAGS\fR
+construction variables are included on this command line\&. You only need to set
+\fB$F08PPCOM\fR
+if you need to use a specific C\-preprocessor command line for Fortran 08 files\&. You should normally set the
+\fB$FORTRANPPCOM\fR
+variable, which specifies the default C\-preprocessor command line for all Fortran versions\&.
+.RE
+.PP
+F08PPCOMSTR
+.RS 4
+The string displayed when a Fortran 08 source file is compiled to an object file after first running the file through the C preprocessor\&. If this is not set, then
+\fB$F08PPCOM\fR
+or
+\fB$FORTRANPPCOM\fR
+(the command line) is displayed\&.
+.RE
+.PP
+F08PPFILESUFFIXES
+.RS 4
+The list of file extensions for which the compilation + preprocessor pass for F08 dialect will be used\&. By default, this is empty
+.RE
+.PP
 F77
 .RS 4
 The Fortran 77 compiler\&. You should normally set the
@@ -13280,37 +13640,57 @@ refer to "Express" or "Express for Desktop" editions\&.
 MSVS
 .RS 4
 When the Microsoft Visual Studio tools are initialized, they set up this dictionary with the following keys:
-.sp
-
-\fBVERSION\fR: the version of MSVS being used (can be set via
+.PP
+VERSION
+.RS 4
+the version of MSVS being used (can be set via
 \fB$MSVS_VERSION\fR)
-.sp
-
-\fBVERSIONS\fR: the available versions of MSVS installed
-.sp
-
-\fBVCINSTALLDIR\fR: installed directory of Visual C++
-.sp
-
-\fBVSINSTALLDIR\fR: installed directory of Visual Studio
-.sp
-
-\fBFRAMEWORKDIR\fR: installed directory of the \&.NET framework
-.sp
-
-\fBFRAMEWORKVERSIONS\fR: list of installed versions of the \&.NET framework, sorted latest to oldest\&.
-.sp
-
-\fBFRAMEWORKVERSION\fR: latest installed version of the \&.NET framework
-.sp
-
-\fBFRAMEWORKSDKDIR\fR: installed location of the \&.NET SDK\&.
-.sp
-
-\fBPLATFORMSDKDIR\fR: installed location of the Platform SDK\&.
-.sp
-
-\fBPLATFORMSDK_MODULES\fR: dictionary of installed Platform SDK modules, where the dictionary keys are keywords for the various modules, and the values are 2\-tuples where the first is the release date, and the second is the version number\&.
+.RE
+.PP
+VERSIONS
+.RS 4
+the available versions of MSVS installed
+.RE
+.PP
+VCINSTALLDIR
+.RS 4
+installed directory of Visual C++
+.RE
+.PP
+VSINSTALLDIR
+.RS 4
+installed directory of Visual Studio
+.RE
+.PP
+FRAMEWORKDIR
+.RS 4
+installed directory of the \&.NET framework
+.RE
+.PP
+FRAMEWORKVERSIONS
+.RS 4
+list of installed versions of the \&.NET framework, sorted latest to oldest\&.
+.RE
+.PP
+FRAMEWORKVERSION
+.RS 4
+latest installed version of the \&.NET framework
+.RE
+.PP
+FRAMEWORKSDKDIR
+.RS 4
+installed location of the \&.NET SDK\&.
+.RE
+.PP
+PLATFORMSDKDIR
+.RS 4
+installed location of the Platform SDK\&.
+.RE
+.PP
+PLATFORMSDK_MODULES
+.RS 4
+dictionary of installed Platform SDK modules, where the dictionary keys are keywords for the various modules, and the values are 2\-tuples where the first is the release date, and the second is the version number\&.
+.RE
 .sp
 If a value isn\*(Aqt set, it wasn\*(Aqt available in the registry\&.
 .RE
@@ -14640,6 +15020,64 @@ SHF03PPCOMSTR
 .RS 4
 The string displayed when a Fortran 03 source file is compiled to a shared\-library object file after first running the file through the C preprocessor\&. If this is not set, then
 \fB$SHF03PPCOM\fR
+or
+\fB$SHFORTRANPPCOM\fR
+(the command line) is displayed\&.
+.RE
+.PP
+SHF08
+.RS 4
+The Fortran 08 compiler used for generating shared\-library objects\&. You should normally set the
+\fB$SHFORTRAN\fR
+variable, which specifies the default Fortran compiler for all Fortran versions\&. You only need to set
+\fB$SHF08\fR
+if you need to use a specific compiler or compiler version for Fortran 08 files\&.
+.RE
+.PP
+SHF08COM
+.RS 4
+The command line used to compile a Fortran 08 source file to a shared\-library object file\&. You only need to set
+\fB$SHF08COM\fR
+if you need to use a specific command line for Fortran 08 files\&. You should normally set the
+\fB$SHFORTRANCOM\fR
+variable, which specifies the default command line for all Fortran versions\&.
+.RE
+.PP
+SHF08COMSTR
+.RS 4
+The string displayed when a Fortran 08 source file is compiled to a shared\-library object file\&. If this is not set, then
+\fB$SHF08COM\fR
+or
+\fB$SHFORTRANCOM\fR
+(the command line) is displayed\&.
+.RE
+.PP
+SHF08FLAGS
+.RS 4
+Options that are passed to the Fortran 08 compiler to generated shared\-library objects\&. You only need to set
+\fB$SHF08FLAGS\fR
+if you need to define specific user options for Fortran 08 files\&. You should normally set the
+\fB$SHFORTRANFLAGS\fR
+variable, which specifies the user\-specified options passed to the default Fortran compiler for all Fortran versions\&.
+.RE
+.PP
+SHF08PPCOM
+.RS 4
+The command line used to compile a Fortran 08 source file to a shared\-library object file after first running the file through the C preprocessor\&. Any options specified in the
+\fB$SHF08FLAGS\fR
+and
+\fB$CPPFLAGS\fR
+construction variables are included on this command line\&. You only need to set
+\fB$SHF08PPCOM\fR
+if you need to use a specific C\-preprocessor command line for Fortran 08 files\&. You should normally set the
+\fB$SHFORTRANPPCOM\fR
+variable, which specifies the default C\-preprocessor command line for all Fortran versions\&.
+.RE
+.PP
+SHF08PPCOMSTR
+.RS 4
+The string displayed when a Fortran 08 source file is compiled to a shared\-library object file after first running the file through the C preprocessor\&. If this is not set, then
+\fB$SHF08PPCOM\fR
 or
 \fB$SHFORTRANPPCOM\fR
 (the command line) is displayed\&.
@@ -19147,5 +19585,5 @@ Author.
 \fBSteven Knight and the SCons Development Team\fR
 .SH "COPYRIGHT"
 .br
-Copyright \(co 2004 - 2014 The SCons Foundation
+Copyright \(co 2004 - 2015 The SCons Foundation
 .br

@@ -8,7 +8,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001 - 2014 The SCons Foundation
+# Copyright (c) 2001 - 2015 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -30,7 +30,7 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/install.py  2014/07/05 09:42:21 garyo"
+__revision__ = "src/engine/SCons/Tool/install.py rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog"
 
 import os
 import re
@@ -145,22 +145,26 @@ def copyFuncVersionedLib(dest, source, env):
 
     return 0
 
-def versionedLibVersion(dest, env):
+def versionedLibVersion(dest, source, env):
     """Check if dest is a version shared library name. Return version, libname, & install_dir if it is."""
     Verbose = False
     platform = env.subst('$PLATFORM')
-    if not (platform == 'posix'  or platform == 'darwin'):
+    if not (platform == 'posix'  or platform == 'darwin' or platform == 'sunos'):
         return (None, None, None)
 
-    libname = os.path.basename(dest)
-    install_dir = os.path.dirname(dest)
+    if (hasattr(source[0], 'attributes') and
+        hasattr(source[0].attributes, 'shlibname')):
+        libname = source[0].attributes.shlibname
+    else:
+        libname = os.path.basename(str(dest))
+    install_dir = os.path.dirname(str(dest))
     shlib_suffix = env.subst('$SHLIBSUFFIX')
     # See if the source name is a versioned shared library, get the version number
     result = False
     
     version_re = re.compile("[0-9]+\\.[0-9]+\\.[0-9a-zA-Z]+")
     version_File = None
-    if platform == 'posix':
+    if platform == 'posix' or platform == 'sunos':
         # handle unix names
         versioned_re = re.compile(re.escape(shlib_suffix + '.') + "[0-9]+\\.[0-9]+\\.[0-9a-zA-Z]+")
         result = versioned_re.findall(libname)
@@ -196,7 +200,7 @@ def versionedLibLinks(dest, source, env):
     """If we are installing a versioned shared library create the required links."""
     Verbose = False
     linknames = []
-    version, libname, install_dir = versionedLibVersion(dest, env)
+    version, libname, install_dir = versionedLibVersion(dest, source, env)
 
     if version != None:
         # libname includes the version number if one was given
@@ -258,7 +262,11 @@ def installFuncVersionedLib(target, source, env):
     assert len(target)==len(source), \
            "Installing source %s into target %s: target and source lists must have same length."%(list(map(str, source)), list(map(str, target)))
     for t,s in zip(target,source):
-        if install(t.get_path(),s.get_path(),env):
+        if hasattr(t.attributes, 'shlibname'):
+            tpath = os.path.join(t.get_dir(), t.attributes.shlibname)
+        else:
+            tpath = t.get_path()
+        if install(tpath,s.get_path(),env):
             return 1
 
     return 0
@@ -301,7 +309,7 @@ def add_versioned_targets_to_INSTALLED_FILES(target, source, env):
         print "ver lib emitter ",repr(target)
 
     # see if we have a versioned shared library, if so generate side effects
-    version, libname, install_dir = versionedLibVersion(target[0].path, env)
+    version, libname, install_dir = versionedLibVersion(target[0], source, env)
     if version != None:
         # generate list of link names
         linknames = SCons.Tool.VersionShLibLinkNames(version,libname,env)

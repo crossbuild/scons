@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2001 - 2014 The SCons Foundation
+# Copyright (c) 2001 - 2015 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -29,7 +29,7 @@ functionality.  It only wraps the portions of io functionality used
 by SCons, in an interface that looks enough like io for our purposes.
 """
 
-__revision__ = "src/engine/SCons/compat/_scons_io.py  2014/07/05 09:42:21 garyo"
+__revision__ = "src/engine/SCons/compat/_scons_io.py rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog"
 
 # Use the "imp" module to protect the imports below from fixers.
 import imp

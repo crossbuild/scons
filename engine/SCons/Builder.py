@@ -76,7 +76,7 @@ There are the following methods for internal use within this module:
 """
 
 #
-# Copyright (c) 2001 - 2014 The SCons Foundation
+# Copyright (c) 2001 - 2015 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -97,7 +97,7 @@ There are the following methods for internal use within this module:
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-__revision__ = "src/engine/SCons/Builder.py  2014/07/05 09:42:21 garyo"
+__revision__ = "src/engine/SCons/Builder.py rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog"
 
 import collections
 
@@ -107,8 +107,6 @@ from SCons.Debug import logInstanceCreation
 from SCons.Errors import InternalError, UserError
 import SCons.Executor
 import SCons.Memoize
-import SCons.Node
-import SCons.Node.FS
 import SCons.Util
 import SCons.Warnings
 
@@ -862,7 +860,7 @@ class CompositeBuilder(SCons.Util.Proxy):
         self.set_src_suffix(self.cmdgen.src_suffixes())
 
 def is_a_Builder(obj):
-    """"Returns True iff the specified obj is one of our Builder classes.
+    """"Returns True if the specified obj is one of our Builder classes.
 
     The test is complicated a bit by the fact that CompositeBuilder
     is a proxy, not a subclass of BuilderBase.

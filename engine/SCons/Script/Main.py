@@ -13,7 +13,7 @@ it goes here.
 unsupported_python_version = (2, 3, 0)
 deprecated_python_version = (2, 7, 0)
 
-# Copyright (c) 2001 - 2014 The SCons Foundation
+# Copyright (c) 2001 - 2015 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -34,7 +34,7 @@ deprecated_python_version = (2, 7, 0)
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-__revision__ = "src/engine/SCons/Script/Main.py  2014/07/05 09:42:21 garyo"
+__revision__ = "src/engine/SCons/Script/Main.py rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog"
 
 import SCons.compat
 
@@ -953,6 +953,14 @@ def _main(parser):
     if options.include_dir:
         sys.path = options.include_dir + sys.path
 
+    # If we're about to start SCons in the interactive mode,
+    # inform the FS about this right here. Else, the release_target_info
+    # method could get called on some nodes, like the used "gcc" compiler,
+    # when using the Configure methods within the SConscripts.
+    # This would then cause subtle bugs, as already happened in #2971.
+    if options.interactive:
+        SCons.Node.interactive = True
+
     # That should cover (most of) the options.  Next, set up the variables
     # that hold command-line arguments, so the SConscript files that we
     # read and execute have access to them.
@@ -1082,7 +1090,6 @@ def _main(parser):
     platform = SCons.Platform.platform_module()
 
     if options.interactive:
-        SCons.Node.interactive = True
         SCons.Script.Interactive.interact(fs, OptionsParser, options,
                                           targets, target_top)
 
@@ -1351,7 +1358,7 @@ def main():
         pass
     parts.append(version_string("engine", SCons))
     parts.append(path_string("engine", SCons))
-    parts.append("Copyright (c) 2001 - 2014 The SCons Foundation")
+    parts.append("Copyright (c) 2001 - 2015 The SCons Foundation")
     version = ''.join(parts)
 
     import SConsOptions

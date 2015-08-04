@@ -10,7 +10,7 @@ from distutils.msvccompiler.
 """
 
 #
-# Copyright (c) 2001 - 2014 The SCons Foundation
+# Copyright (c) 2001 - 2015 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -33,7 +33,7 @@ from distutils.msvccompiler.
 #
 from __future__ import division
 
-__revision__ = "src/engine/SCons/Defaults.py  2014/07/05 09:42:21 garyo"
+__revision__ = "src/engine/SCons/Defaults.py rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog"
 
 
 import os
@@ -181,20 +181,36 @@ def chmod_strfunc(dest, mode):
 
 Chmod = ActionFactory(chmod_func, chmod_strfunc)
 
-def copy_func(dest, src):
+def copy_func(dest, src, symlinks=True):
+    """
+    If symlinks (is true), then a symbolic link will be
+    shallow copied and recreated as a symbolic link; otherwise, copying
+    a symbolic link will be equivalent to copying the symbolic link's
+    final target regardless of symbolic link depth.
+    """
+
+    dest = str(dest)
+    src = str(src)
+
     SCons.Node.FS.invalidate_node_memos(dest)
     if SCons.Util.is_List(src) and os.path.isdir(dest):
         for file in src:
             shutil.copy2(file, dest)
         return 0
+    elif os.path.islink(src):
+        if symlinks:
+            return os.symlink(os.readlink(src), dest)
+        else:
+            return copy_func(dest, os.path.realpath(src))
     elif os.path.isfile(src):
         return shutil.copy2(src, dest)
     else:
-        return shutil.copytree(src, dest, 1)
+        return shutil.copytree(src, dest, symlinks)
 
-Copy = ActionFactory(copy_func,
-                     lambda dest, src: 'Copy("%s", "%s")' % (dest, src),
-                     convert=str)
+Copy = ActionFactory(
+    copy_func,
+    lambda dest, src, symlinks=True: 'Copy("%s", "%s")' % (dest, src)
+)
 
 def delete_func(dest, must_exist=0):
     SCons.Node.FS.invalidate_node_memos(dest)

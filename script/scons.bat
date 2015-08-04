@@ -1,11 +1,11 @@
-@REM Copyright (c) 2001 - 2014 The SCons Foundation
-@REM src/script/scons.bat  2014/07/05 09:42:21 garyo
+@REM Copyright (c) 2001 - 2015 The SCons Foundation
+@REM src/script/scons.bat rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog
 @echo off
 set SCONS_ERRORLEVEL=
 if "%OS%" == "Windows_NT" goto WinNT
 
 @REM for 9x/Me you better not have more than 9 args
-python -c "from os.path import join; import sys; sys.path = [ join(sys.prefix, 'Lib', 'site-packages', 'scons-2.3.2'), join(sys.prefix, 'Lib', 'site-packages', 'scons'), join(sys.prefix, 'scons-2.3.2'), join(sys.prefix, 'scons')] + sys.path; import SCons.Script; SCons.Script.main()" %1 %2 %3 %4 %5 %6 %7 %8 %9
+python -c "from os.path import join; import sys; sys.path = [ join(sys.prefix, 'Lib', 'site-packages', 'scons-2.3.6'), join(sys.prefix, 'Lib', 'site-packages', 'scons'), join(sys.prefix, 'scons-2.3.6'), join(sys.prefix, 'scons')] + sys.path; import SCons.Script; SCons.Script.main()" %1 %2 %3 %4 %5 %6 %7 %8 %9
 @REM no way to set exit status of this script for 9x/Me
 goto endscons
 

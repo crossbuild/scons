@@ -4,7 +4,7 @@ The rpm packager.
 """
 
 #
-# Copyright (c) 2001 - 2014 The SCons Foundation
+# Copyright (c) 2001 - 2015 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -25,7 +25,7 @@ The rpm packager.
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-__revision__ = "src/engine/SCons/Tool/packaging/rpm.py  2014/07/05 09:42:21 garyo"
+__revision__ = "src/engine/SCons/Tool/packaging/rpm.py rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog"
 
 import os
 
@@ -182,7 +182,7 @@ def build_specfile_sections(spec):
         spec['X_RPM_PREP'] = '[ -n "$RPM_BUILD_ROOT" -a "$RPM_BUILD_ROOT" != / ] && rm -rf "$RPM_BUILD_ROOT"' + '\n%setup -q'
 
     if 'X_RPM_BUILD' not in spec:
-        spec['X_RPM_BUILD'] = 'mkdir "$RPM_BUILD_ROOT"'
+        spec['X_RPM_BUILD'] = '[ ! -e "$RPM_BUILD_ROOT" -a "$RPM_BUILD_ROOT" != / ] && mkdir "$RPM_BUILD_ROOT"'
 
     if 'X_RPM_INSTALL' not in spec:
         spec['X_RPM_INSTALL'] = 'scons --install-sandbox="$RPM_BUILD_ROOT" "$RPM_BUILD_ROOT"'

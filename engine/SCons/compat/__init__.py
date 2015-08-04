@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2001 - 2014 The SCons Foundation
+# Copyright (c) 2001 - 2015 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -60,7 +60,7 @@ function defined below loads the module as the "real" name (without the
 rest of our code will find our pre-loaded compatibility module.
 """
 
-__revision__ = "src/engine/SCons/compat/__init__.py  2014/07/05 09:42:21 garyo"
+__revision__ = "src/engine/SCons/compat/__init__.py rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog"
 
 import os
 import sys

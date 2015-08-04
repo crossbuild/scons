@@ -10,7 +10,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001 - 2014 The SCons Foundation
+# Copyright (c) 2001 - 2015 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -32,7 +32,7 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/gfortran.py  2014/07/05 09:42:21 garyo"
+__revision__ = "src/engine/SCons/Tool/gfortran.py rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog"
 
 import SCons.Util
 
@@ -43,7 +43,7 @@ def generate(env):
     Environment."""
     fortran.generate(env)
 
-    for dialect in ['F77', 'F90', 'FORTRAN', 'F95', 'F03']:
+    for dialect in ['F77', 'F90', 'FORTRAN', 'F95', 'F03', 'F08']:
         env['%s' % dialect] = 'gfortran'
         env['SH%s' % dialect] = '$%s' % dialect
         if env['PLATFORM'] in ['cygwin', 'win32']:

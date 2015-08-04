@@ -36,7 +36,7 @@ Lib tool variables:
 """
 
 #
-# Copyright (c) 2001 - 2014 The SCons Foundation
+# Copyright (c) 2001 - 2015 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -58,7 +58,7 @@ Lib tool variables:
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/dmd.py  2014/07/05 09:42:21 garyo"
+__revision__ = "src/engine/SCons/Tool/dmd.py rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog"
 
 import os
 import subprocess
@@ -82,10 +82,10 @@ def generate(env):
 
     env['DC'] = env.Detect(['dmd', 'gdmd'])
     env['DCOM'] = '$DC $_DINCFLAGS $_DVERFLAGS $_DDEBUGFLAGS $_DFLAGS -c -of$TARGET $SOURCES'
-    env['_DINCFLAGS'] = '$( ${_concat(DINCPREFIX, DPATH, DINCSUFFIX, __env__, RDirs, TARGET, SOURCE)}  $)'
-    env['_DVERFLAGS'] = '$( ${_concat(DVERPREFIX, DVERSIONS, DVERSUFFIX, __env__)}  $)'
-    env['_DDEBUGFLAGS'] = '$( ${_concat(DDEBUGPREFIX, DDEBUG, DDEBUGSUFFIX, __env__)} $)'
-    env['_DFLAGS'] = '$( ${_concat(DFLAGPREFIX, DFLAGS, DFLAGSUFFIX, __env__)} $)'
+    env['_DINCFLAGS'] = '${_concat(DINCPREFIX, DPATH, DINCSUFFIX, __env__, RDirs, TARGET, SOURCE)}'
+    env['_DVERFLAGS'] = '${_concat(DVERPREFIX, DVERSIONS, DVERSUFFIX, __env__)}'
+    env['_DDEBUGFLAGS'] = '${_concat(DDEBUGPREFIX, DDEBUG, DDEBUGSUFFIX, __env__)}'
+    env['_DFLAGS'] = '${_concat(DFLAGPREFIX, DFLAGS, DFLAGSUFFIX, __env__)}'
 
     env['SHDC'] = '$DC'
     env['SHDCOM'] = '$DC $_DINCFLAGS $_DVERFLAGS $_DDEBUGFLAGS $_DFLAGS -c -fPIC -of$TARGET $SOURCES'
@@ -94,8 +94,6 @@ def generate(env):
     env['DFLAGS'] = []
     env['DVERSIONS'] = []
     env['DDEBUG'] = []
-
-    env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME'] = 0
 
     if env['DC']:
         SCons.Tool.DCommon.addDPATHToEnv(env, env['DC'])
@@ -124,13 +122,13 @@ def generate(env):
 
     env['DLIBDIRPREFIX'] = '-L-L'
     env['DLIBDIRSUFFIX'] = ''
-    env['_DLIBDIRFLAGS'] = '$( ${_concat(DLIBDIRPREFIX, LIBPATH, DLIBDIRSUFFIX, __env__, RDirs, TARGET, SOURCE)} $)'
+    env['_DLIBDIRFLAGS'] = '${_concat(DLIBDIRPREFIX, LIBPATH, DLIBDIRSUFFIX, __env__, RDirs, TARGET, SOURCE)}'
 
 
     env['DLIB'] = 'lib' if env['PLATFORM'] == 'win32' else 'ar cr'
-    env['DLIBCOM'] = '$DLIB $_DLIBFLAGS {} $TARGET $SOURCES $_DLIBFLAGS'.format('-c' if env['PLATFORM'] == 'win32' else '')
+    env['DLIBCOM'] = '$DLIB $_DLIBFLAGS {0}$TARGET $SOURCES $_DLIBFLAGS'.format('-c ' if env['PLATFORM'] == 'win32' else '')
 
-    #env['_DLIBFLAGS'] = '$( ${_concat(DLIBFLAGPREFIX, DLIBFLAGS, DLIBFLAGSUFFIX, __env__)} $)'
+    #env['_DLIBFLAGS'] = '${_concat(DLIBFLAGPREFIX, DLIBFLAGS, DLIBFLAGSUFFIX, __env__)}'
 
     env['DLIBFLAGPREFIX'] = '-'
     env['DLIBFLAGSUFFIX'] = ''

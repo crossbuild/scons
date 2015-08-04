@@ -2,18 +2,17 @@
 
 Autoconf-like configuration support.
 
-In other words, this package allows to run series of tests to detect
-capabilities of current system and generate config files (header files
-in C/C++) that turn on system-specific options and optimizations.
+In other words, SConf allows to run tests on the build machine to detect
+capabilities of system and do some things based on result: generate config
+files, header files for C/C++, update variables in environment.
 
-For example, it is possible to detect if optional libraries are present
-on current system and generate config that makes compiler include them.
-C compilers do not have ability to catch ImportError if some library is
-not found, so these checks should be done externally.
+Tests on the build system can detect if compiler sees header files, if
+libraries are installed, if some command line options are supported etc.
+
 """
 
 #
-# Copyright (c) 2001 - 2014 The SCons Foundation
+# Copyright (c) 2001 - 2015 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -35,7 +34,7 @@ not found, so these checks should be done externally.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/SConf.py  2014/07/05 09:42:21 garyo"
+__revision__ = "src/engine/SCons/SConf.py rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog"
 
 import SCons.compat
 
@@ -198,10 +197,8 @@ class Streamer(object):
         try:
             self.s.write(str)
         except TypeError as e:
-            if e.message.startswith('unicode argument expected'):
-                self.s.write(str.decode())
-            else:
-                raise
+            # "unicode argument expected" bug in IOStream (python 2.x)
+            self.s.write(str.decode())
 
     def writelines(self, lines):
         for l in lines:

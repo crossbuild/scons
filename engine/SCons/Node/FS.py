@@ -11,7 +11,7 @@ that can be used by scripts or modules looking for the canonical default.
 """
 
 #
-# Copyright (c) 2001 - 2014 The SCons Foundation
+# Copyright (c) 2001 - 2015 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -32,7 +32,7 @@ that can be used by scripts or modules looking for the canonical default.
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-__revision__ = "src/engine/SCons/Node/FS.py  2014/07/05 09:42:21 garyo"
+__revision__ = "src/engine/SCons/Node/FS.py rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog"
 
 import fnmatch
 import os
@@ -1401,7 +1401,7 @@ class FS(LocalFS):
             message = fmt % ' '.join(map(str, targets))
         return targets, message
 
-    def Glob(self, pathname, ondisk=True, source=True, strings=False, cwd=None):
+    def Glob(self, pathname, ondisk=True, source=True, strings=False, exclude=None, cwd=None):
         """
         Globs
 
@@ -1409,7 +1409,7 @@ class FS(LocalFS):
         """
         if cwd is None:
             cwd = self.getcwd()
-        return cwd.glob(pathname, ondisk, source, strings)
+        return cwd.glob(pathname, ondisk, source, strings, exclude)
 
 class DirNodeInfo(SCons.Node.NodeInfoBase):
     # This should get reset by the FS initialization.
@@ -1830,6 +1830,12 @@ class Dir(Base):
         return self.tpath + OS_SEP + name
 
     def entry_exists_on_disk(self, name):
+        """ Searches through the file/dir entries of the current
+            directory, and returns True if a physical entry with the given
+            name could be found.
+            
+            @see rentry_exists_on_disk
+        """
         try:
             d = self.on_disk_entries
         except AttributeError:
@@ -1853,6 +1859,33 @@ class Dir(Base):
             return result
         else:
             return name in d
+
+    def rentry_exists_on_disk(self, name):
+        """ Searches through the file/dir entries of the current
+            *and* all its remote directories (repos), and returns
+            True if a physical entry with the given name could be found.
+            The local directory (self) gets searched first, so
+            repositories take a lower precedence regarding the
+            searching order.
+            
+            @see entry_exists_on_disk
+        """
+        
+        rentry_exists = self.entry_exists_on_disk(name)
+        if not rentry_exists:
+            # Search through the repository folders
+            norm_name = _my_normcase(name)
+            for rdir in self.get_all_rdirs():
+                try:
+                    node = rdir.entries[norm_name]
+                    if node:
+                        rentry_exists = True
+                        break
+                except KeyError:
+                    if rdir.entry_exists_on_disk(name):
+                        rentry_exists = True
+                        break
+        return rentry_exists
 
     memoizer_counters.append(SCons.Memoize.CountValue('srcdir_list'))
 
@@ -1987,7 +2020,7 @@ class Dir(Base):
         for dirname in [n for n in names if isinstance(entries[n], Dir)]:
             entries[dirname].walk(func, arg)
 
-    def glob(self, pathname, ondisk=True, source=False, strings=False):
+    def glob(self, pathname, ondisk=True, source=False, strings=False, exclude=None):
         """
         Returns a list of Nodes (or strings) matching a specified
         pathname pattern.
@@ -2015,24 +2048,31 @@ class Dir(Base):
         The "strings" argument, when true, returns the matches as strings,
         not Nodes.  The strings are path names relative to this directory.
 
+        The "exclude" argument, if not None, must be a pattern or a list
+        of patterns following the same UNIX shell semantics.
+        Elements matching a least one pattern of this list will be excluded
+        from the result.
+
         The underlying algorithm is adapted from the glob.glob() function
         in the Python library (but heavily modified), and uses fnmatch()
         under the covers.
         """
         dirname, basename = os.path.split(pathname)
         if not dirname:
-            return sorted(self._glob1(basename, ondisk, source, strings),
-                          key=lambda t: str(t))
-        if has_glob_magic(dirname):
-            list = self.glob(dirname, ondisk, source, strings=False)
+            result = self._glob1(basename, ondisk, source, strings)
         else:
-            list = [self.Dir(dirname, create=True)]
-        result = []
-        for dir in list:
-            r = dir._glob1(basename, ondisk, source, strings)
-            if strings:
-                r = [os.path.join(str(dir), x) for x in r]
-            result.extend(r)
+            if has_glob_magic(dirname):
+                list = self.glob(dirname, ondisk, source, False, exclude)
+            else:
+                list = [self.Dir(dirname, create=True)]
+            result = []
+            for dir in list:
+                r = dir._glob1(basename, ondisk, source, strings)
+                if strings:
+                    r = [os.path.join(str(dir), x) for x in r]
+                result.extend(r)
+        if exclude:
+            result = filter(lambda x: not any(fnmatch.fnmatch(str(x), e) for e in SCons.Util.flatten(exclude)), result)
         return sorted(result, key=lambda a: str(a))
 
     def _glob1(self, pattern, ondisk=True, source=False, strings=False):
@@ -2095,14 +2135,12 @@ class Dir(Base):
 
         names = set(names)
         if pattern[0] != '.':
-            #names = [ n for n in names if n[0] != '.' ]
             names = [x for x in names if x[0] != '.']
         names = fnmatch.filter(names, pattern)
 
         if strings:
             return names
 
-        #return [ self.entries[_my_normcase(n)] for n in names ]
         return [self.entries[_my_normcase(n)] for n in names]
 
 class RootDir(Dir):
@@ -2197,17 +2235,7 @@ class RootDir(Dir):
                 raise SCons.Errors.UserError(msg)
             # There is no Node for this path name, and we're allowed
             # to create it.
-            # (note: would like to use p.rsplit('/',1) here but
-            # that's not in python 2.3)
-            # e.g.: dir_name, file_name = p.rsplit('/',1)
-            last_slash = p.rindex('/')
-            if (last_slash >= 0):
-                dir_name  = p[:last_slash]
-                file_name = p[last_slash+1:]
-            else:
-                dir_name  = p         # shouldn't happen, just in case
-                file_name = ''
-
+            dir_name, file_name = p.rsplit('/',1)
             dir_node = self._lookup_abs(dir_name, Dir)
             result = klass(file_name, dir_node, self.fs)
 

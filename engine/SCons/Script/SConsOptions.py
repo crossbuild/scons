@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2001 - 2014 The SCons Foundation
+# Copyright (c) 2001 - 2015 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -21,7 +21,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Script/SConsOptions.py  2014/07/05 09:42:21 garyo"
+__revision__ = "src/engine/SCons/Script/SConsOptions.py rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog"
 
 import optparse
 import re
@@ -319,7 +319,13 @@ class SConsOptionParser(optparse.OptionParser):
                     value = option.const
             elif len(rargs) < nargs:
                 if nargs == 1:
-                    self.error(_("%s option requires an argument") % opt)
+                    if not option.choices:
+                        self.error(_("%s option requires an argument") % opt)
+                    else:
+                        msg  = _("%s option requires an argument " % opt)
+                        msg += _("(choose from %s)"
+                                 % ', '.join(option.choices))
+                        self.error(msg)
                 else:
                     self.error(_("%s option requires %d arguments")
                                % (opt, nargs))
@@ -645,18 +651,12 @@ def Parser(version):
 
     config_options = ["auto", "force" ,"cache"]
 
-    def opt_config(option, opt, value, parser, c_options=config_options):
-        if not value in c_options:
-            raise OptionValueError(opt_invalid('config', value, c_options))
-        setattr(parser.values, option.dest, value)
-
     opt_config_help = "Controls Configure subsystem: %s." \
                       % ", ".join(config_options)
 
     op.add_option('--config',
-                  nargs=1, type="string",
+                  nargs=1, choices=config_options,
                   dest="config", default="auto",
-                  action="callback", callback=opt_config,
                   help = opt_config_help,
                   metavar="MODE")
 

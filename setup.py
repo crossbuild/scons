@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2001 - 2014 The SCons Foundation
+# Copyright (c) 2001 - 2015 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -32,13 +32,13 @@ NOTE: Installed SCons is not importable like usual Python packages. It is
       below is dedicated to make it happen on various platforms.
 """
 
-__revision__ = "src/setup.py  2014/07/05 09:42:21 garyo"
+__revision__ = "src/setup.py rel_2.3.5:3347:d31d5a4e74b6 2015/07/31 14:36:10 bdbaddog"
 
 import os
 import stat
 import sys
 
-Version = "2.3.2"
+Version = "2.3.6"
 
 man_pages = [
     'scons.1',
@@ -81,6 +81,16 @@ import distutils.command.install_data
 import distutils.command.install_lib
 import distutils.command.install_scripts
 import distutils.command.build_scripts
+import distutils.msvccompiler
+
+def get_build_version():
+    """ monkey patch distutils msvc version if we're not on windows.
+    We need to use vc version 9 for python 2.7.x and it defaults to 6
+    for non-windows platforms and there is no way to override it besides
+    monkey patching"""
+    return 9
+
+distutils.msvccompiler.get_build_version = get_build_version
 
 _install = distutils.command.install.install
 _install_data = distutils.command.install_data.install_data
